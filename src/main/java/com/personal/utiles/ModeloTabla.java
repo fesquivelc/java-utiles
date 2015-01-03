@@ -21,6 +21,11 @@ public abstract class ModeloTabla<T> extends AbstractTableModel implements Obser
     public List<T> datos;
     public String[] nombreColumnas;
     public String[] propiedades;
+    
+    public ModeloTabla(List<T> datos){
+        this.datos = datos;
+        inicializacion();
+    }
 
     public ModeloTabla(List<T> datos, String[] nombreColumnas) {
         this.datos = datos;

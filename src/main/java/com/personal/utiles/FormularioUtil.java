@@ -187,8 +187,8 @@ public class FormularioUtil {
             component.setEnabled(editable);
         } else if (component instanceof JTable) {
             ((JTable) component).setEnabled(editable);
-        }else if(component instanceof JComboBox){
-            ((JComboBox)component).setEnabled(editable);
+        } else if (component instanceof JComboBox) {
+            ((JComboBox) component).setEnabled(editable);
         } else if (component instanceof JComponent) {
             for (Component c : ((JComponent) component).getComponents()) {
                 activarComponente(c, editable);
@@ -199,7 +199,9 @@ public class FormularioUtil {
     }
 
     public static void limpiarComponente(Component component) {
-        if (component instanceof JTextArea) {
+        if (component instanceof JSpinner || component instanceof JTable) {
+
+        } else if (component instanceof JTextArea) {
             JTextArea texto = (JTextArea) component;
             texto.setText("");
         } else if (component instanceof JComboBox) {
@@ -217,7 +219,9 @@ public class FormularioUtil {
     }
 
     public static void convertirMayusculas(Component component) {
-        if (component instanceof JTextArea) {
+        if (component instanceof JSpinner || component instanceof JTable) {
+
+        } else if (component instanceof JTextArea) {
             JTextArea texto = (JTextArea) component;
             texto.setText(texto.getText().toUpperCase());
         } else if (component instanceof JTextComponent) {

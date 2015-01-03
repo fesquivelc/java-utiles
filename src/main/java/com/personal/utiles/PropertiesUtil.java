@@ -8,10 +8,12 @@ package com.personal.utiles;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.Properties;
-import java.util.logging.Level;
+import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 /**
@@ -19,27 +21,28 @@ import org.apache.log4j.Logger;
  * @author fesquivelc
  */
 public class PropertiesUtil {
+
     private static final Logger LOG = Logger.getLogger(PropertiesUtil.class.getName());
-    
-    public static Properties cargarProperties(String url){
+
+    public static Properties cargarProperties(String url) {
         File fichero = new File(url);
-        InputStream is = null;
         Properties properties = new Properties();
-        try {
-           is = new FileInputStream(fichero);
+        try(InputStream is = new FileInputStream(fichero)) {
+            properties.load(is);
         } catch (FileNotFoundException ex) {
-            java.util.logging.Logger.getLogger(PropertiesUtil.class.getName()).log(Level.SEVERE, null, ex);
+            LOG.error(ex);
+        } catch (IOException ex) {
+            LOG.error(ex);
         }
-        
-        if(is != null){
-            try {
-                properties.load(is);
-            } catch (IOException ex) {
-                java.util.logging.Logger.getLogger(PropertiesUtil.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-        
         return properties;
-        
+
+    }
+
+    public static void guardarProperties(Properties fichero, String url) {
+        try(OutputStream out = new FileOutputStream(url)){
+            fichero.store(out,"FICHERO DE CONFIGURACIÓN");
+        } catch (Exception e) {
+            LOG.error(e);
+        }
     }
 }
