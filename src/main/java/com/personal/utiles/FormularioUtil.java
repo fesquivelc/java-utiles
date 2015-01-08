@@ -20,6 +20,7 @@ import java.nio.file.StandardCopyOption;
 import javax.swing.AbstractButton;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
@@ -177,7 +178,9 @@ public class FormularioUtil {
     }
 
     public static void activarComponente(Component component, boolean editable) {
-        if (component instanceof JDateChooser) {
+        if(component instanceof JCheckBox){
+            component.setEnabled(editable);
+        }else if (component instanceof JDateChooser) {
             JDateChooser dc = (JDateChooser) component;
             activarComponente(dc.getCalendarButton(), editable);
             ((JTextFieldDateEditor) dc.getDateEditor()).setEditable(false);
@@ -244,6 +247,13 @@ public class FormularioUtil {
         File fichero = new File(imgRuta);
         ImageIcon img = new ImageIcon(fichero.getAbsolutePath());
         Icon icono = new ImageIcon(img.getImage().getScaledInstance(label.getWidth(), label.getHeight(), Image.SCALE_DEFAULT));
+        label.setIcon(icono);
+    }
+    
+    public static void imagenALabel(String imgRuta, JLabel label, boolean mod) {
+        File fichero = new File(imgRuta);
+        ImageIcon img = new ImageIcon(fichero.getAbsolutePath());
+        Icon icono = new ImageIcon(img.getImage().getScaledInstance(img.getIconWidth(), img.getIconHeight(), Image.SCALE_DEFAULT));
         label.setIcon(icono);
     }
 
