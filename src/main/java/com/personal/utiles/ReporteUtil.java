@@ -5,6 +5,7 @@
  */
 package com.personal.utiles;
 
+import java.awt.Component;
 import java.awt.Frame;
 import java.awt.GraphicsEnvironment;
 import java.io.File;
@@ -13,6 +14,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Map;
 import javax.swing.JDialog;
+import javax.swing.JPanel;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
@@ -61,7 +63,7 @@ public class ReporteUtil {
             visor.getContentPane().add(jasperViewer.getContentPane());
             visor.setLocationRelativeTo(ventana);
             
-            visor.setUndecorated(true);
+//            visor.setUndecorated(true);
             visor.setBounds(GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds());
             visor.setVisible(true);
             visor.setAlwaysOnTop(true);
@@ -75,6 +77,28 @@ public class ReporteUtil {
             }
         } catch (JRException ex) {
             Logger.getLogger(ReporteUtil.class.getName()).log(Level.ERROR, null, ex);
+        }
+
+    }
+    
+    public Component obtenerReporte(File reporte, Map parametros){
+        try {
+            JasperReport report = (JasperReport) JRLoader.loadObject(reporte);
+            parametros.put("ruta", rutaRelativa);
+            JasperPrint jasperPrint = JasperFillManager.fillReport(report, parametros, conn);
+            JasperViewer jasperViewer = new JasperViewer(jasperPrint, false);
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException ex) {
+                    System.out.println("ESTO ES MALO2: " + ex.getMessage());
+                }
+            }
+            
+            return jasperViewer.getContentPane();
+        } catch (JRException ex) {
+            Logger.getLogger(ReporteUtil.class.getName()).log(Level.ERROR, null, ex);
+            return null;
         }
 
     }

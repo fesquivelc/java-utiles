@@ -17,7 +17,8 @@ public class ParametrosUtil {
     public static String obtenerDriver(int tipoBD){
         switch(tipoBD){
             case MSSQLSERVER:
-                return "com.microsoft.jdbc.sqlserver.SQLServerDriver";
+                return "com.microsoft.sqlserver.jdbc.SQLServerDriver";
+                
             case MYSQL:
                 return "com.mysql.jdbc.Driver";
             case POSTGRESQL:

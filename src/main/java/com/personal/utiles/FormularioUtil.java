@@ -52,6 +52,7 @@ public class FormularioUtil {
     public final static int NUEVO = 1;
     public final static int MODIFICAR = 2;
     public final static int ELIMINAR = 3;
+    public final static int IMPRIMIR = 4;
 
     public static boolean dialogoConfirmar(Component parent, int opcion) {
         String mensaje = "";
@@ -70,6 +71,10 @@ public class FormularioUtil {
             case ELIMINAR:
                 mensaje = "¿Desea eliminar el elemento seleccionado?";
                 tipoMensaje = JOptionPane.WARNING_MESSAGE;
+                break;
+            case IMPRIMIR:
+                mensaje = "¿Desea imprimir?";
+                tipoMensaje = JOptionPane.QUESTION_MESSAGE;
                 break;
         }
 
