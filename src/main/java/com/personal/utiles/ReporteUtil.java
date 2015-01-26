@@ -84,6 +84,7 @@ public class ReporteUtil {
     public Component obtenerReporte(File reporte, Map parametros){
         try {
             JasperReport report = (JasperReport) JRLoader.loadObject(reporte);
+            System.out.println("RUTA: " + reporte.getAbsolutePath());
             parametros.put("ruta", rutaRelativa);
             JasperPrint jasperPrint = JasperFillManager.fillReport(report, parametros, conn);
             JasperViewer jasperViewer = new JasperViewer(jasperPrint, false);
