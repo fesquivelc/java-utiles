@@ -12,6 +12,7 @@ import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Map;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
@@ -19,6 +20,7 @@ import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import net.sf.jasperreports.engine.util.JRLoader;
 import net.sf.jasperreports.view.JasperViewer;
 import org.apache.log4j.Level;
@@ -80,6 +82,30 @@ public class ReporteUtil {
         }
 
     }
+    public void generarReporte(List listaObjetos, File reporte, Map parametros, Frame ventana){
+        try {            
+            JDialog visor = new JDialog(ventana, "Titulo", true);
+            JRBeanCollectionDataSource origen = new JRBeanCollectionDataSource(listaObjetos);
+            JasperReport report = (JasperReport) JRLoader.loadObject(reporte);
+//            System.out.println("INSIGNIA: " + insignia.getAbsolutePath());
+            parametros.put("ruta", rutaRelativa);
+//            LOG.log(Level.INFO, "La ruta relativa es {0}", rutaRelativa);
+            JasperPrint jasperPrint = JasperFillManager.fillReport(report, parametros, origen);
+            JasperViewer jasperViewer = new JasperViewer(jasperPrint, false);
+            visor.setSize(jasperViewer.getSize());
+//        visor.setSize(ventana.getSize().width, ventana.getSize().height);
+            visor.getContentPane().add(jasperViewer.getContentPane());
+            visor.setLocationRelativeTo(ventana);
+            
+//            visor.setUndecorated(true);
+            visor.setBounds(GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds());
+            visor.setVisible(true);
+            visor.setAlwaysOnTop(true);
+        } catch (JRException ex) {
+            Logger.getLogger(ReporteUtil.class.getName()).log(Level.ERROR, null, ex);
+        }
+
+    }
     
     public Component obtenerReporte(File reporte, Map parametros){
         try {
@@ -95,6 +121,22 @@ public class ReporteUtil {
                     System.out.println("ESTO ES MALO2: " + ex.getMessage());
                 }
             }
+            
+            return jasperViewer.getContentPane();
+        } catch (JRException ex) {
+            Logger.getLogger(ReporteUtil.class.getName()).log(Level.ERROR, null, ex);
+            return null;
+        }
+
+    }
+    public Component obtenerReporte(List listaObjetos,File reporte, Map parametros){
+        try {
+            JasperReport report = (JasperReport) JRLoader.loadObject(reporte);
+            System.out.println("RUTA: " + reporte.getAbsolutePath());
+            parametros.put("ruta", rutaRelativa);
+            JRBeanCollectionDataSource origen = new JRBeanCollectionDataSource(listaObjetos);
+            JasperPrint jasperPrint = JasperFillManager.fillReport(report, parametros, origen);
+            JasperViewer jasperViewer = new JasperViewer(jasperPrint, false);
             
             return jasperViewer.getContentPane();
         } catch (JRException ex) {
