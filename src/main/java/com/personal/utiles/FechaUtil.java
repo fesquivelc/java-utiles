@@ -28,6 +28,21 @@ public class FechaUtil {
         }
     }
 
+    public static Date unirFechaHora(Date fecha, Date hora){
+        Calendar calFecha = Calendar.getInstance();
+        Calendar calHora = Calendar.getInstance();
+        
+        calFecha.setTime(fecha);
+        calHora.setTime(hora);
+        
+        calFecha.set(Calendar.HOUR_OF_DAY, calHora.get(Calendar.HOUR_OF_DAY));
+        calFecha.set(Calendar.MINUTE, calHora.get(Calendar.MINUTE));
+        calFecha.set(Calendar.SECOND, calHora.get(Calendar.SECOND));
+        calFecha.set(Calendar.MILLISECOND, calHora.get(Calendar.MILLISECOND));
+        
+        return calFecha.getTime();
+    }
+
     public static int[] milisToTime(long milis) {
         int[] hora = new int[3];
 
