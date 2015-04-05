@@ -37,6 +37,17 @@ public class PropertiesUtil {
         return properties;
 
     }
+    public static Properties cargarProperties(InputStream is) {
+        Properties properties = new Properties();
+        try(InputStream fichero = is) {
+            properties.load(fichero);
+        } catch (FileNotFoundException ex) {
+            LOG.error(ex);
+        } catch (IOException ex) {
+            LOG.error(ex);
+        }
+        return properties;
+    }
 
     public static void guardarProperties(Properties fichero, String url) {
         try(OutputStream out = new FileOutputStream(url)){

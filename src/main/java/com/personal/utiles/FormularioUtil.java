@@ -175,6 +175,23 @@ public class FormularioUtil {
         }
     }
     
+    public static String chooserFicheroGuardar(Component component, String titulo){
+        if (chooserFichero == null) {
+            chooserFichero = new JFileChooser();
+            chooserFichero.setCurrentDirectory(new java.io.File("."));
+        }
+        chooserFichero.setDialogTitle(titulo);
+        chooserFichero.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        chooserFichero.setAcceptAllFileFilterUsed(false);
+        
+        if(chooserFichero.showSaveDialog(JOptionPane.getFrameForComponent(component)) == JFileChooser.APPROVE_OPTION){
+            chooserFichero.setCurrentDirectory(chooserFichero.getSelectedFile());
+            return chooserFichero.getSelectedFile().getAbsolutePath();
+        }else{
+            return "";
+        }
+    }
+    
     private static final Logger LOG = Logger.getLogger(FormularioUtil.class.getName());
 
     public static String guardarImagen(String origen, String directorioImg) {
