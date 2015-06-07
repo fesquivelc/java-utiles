@@ -14,6 +14,7 @@ import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Map;
 import javax.swing.JDialog;
 import net.sf.jasperreports.engine.JRException;
@@ -191,6 +192,22 @@ public class ReporteUtil {
                 }
             }
 
+            return jasperViewer.getContentPane();
+        } catch (JRException ex) {
+            Logger.getLogger(ReporteUtil.class.getName()).log(Level.ERROR, null, ex);
+            return null;
+        }
+
+    }
+    public Component obtenerReporte(List listaObjetos,File reporte, Map parametros){
+        try {
+            JasperReport report = (JasperReport) JRLoader.loadObject(reporte);
+            System.out.println("RUTA: " + reporte.getAbsolutePath());
+            parametros.put("ruta", rutaRelativa);
+            JRBeanCollectionDataSource origen = new JRBeanCollectionDataSource(listaObjetos);
+            JasperPrint jasperPrint = JasperFillManager.fillReport(report, parametros, origen);
+            JasperViewer jasperViewer = new JasperViewer(jasperPrint, false);
+            
             return jasperViewer.getContentPane();
         } catch (JRException ex) {
             Logger.getLogger(ReporteUtil.class.getName()).log(Level.ERROR, null, ex);
