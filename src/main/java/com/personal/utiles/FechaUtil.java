@@ -18,6 +18,21 @@ public class FechaUtil {
 
     private static final Logger LOG = Logger.getLogger(FechaUtil.class.getName());
 
+    public static Date unirFechaHora(Date fecha, Date hora){
+        Calendar calFecha = Calendar.getInstance();
+        Calendar calHora = Calendar.getInstance();
+        
+        calFecha.setTime(fecha);
+        calHora.setTime(hora);
+        
+        calFecha.set(Calendar.HOUR_OF_DAY, calHora.get(Calendar.HOUR_OF_DAY));
+        calFecha.set(Calendar.MINUTE, calHora.get(Calendar.MINUTE));
+        calFecha.set(Calendar.SECOND, calHora.get(Calendar.SECOND));
+        calFecha.set(Calendar.MILLISECOND, calHora.get(Calendar.MILLISECOND));
+        
+        return calFecha.getTime();
+    }
+    
     public static int compararFechaHora(Date fecha1, Date hora1, Date fecha2, Date hora2) {
         if (fecha1.compareTo(fecha2) < 0) {
             return -1;

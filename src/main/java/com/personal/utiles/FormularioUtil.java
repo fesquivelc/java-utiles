@@ -122,12 +122,17 @@ public class FormularioUtil {
     }
 
     public static String getExtension(File f) {
-        String ext = null;
         String s = f.getName();
-        int i = s.lastIndexOf('.');
+        
+        return getExtension(s);
+    }
+    
+    public static String getExtension(String nombre) {
+        String ext = null;
+        int i = nombre.lastIndexOf('.');
 
-        if (i > 0 && i < s.length() - 1) {
-            ext = s.substring(i + 1).toLowerCase();
+        if (i > 0 && i < nombre.length() - 1) {
+            ext = nombre.substring(i + 1);
         }
         return ext;
     }
@@ -168,6 +173,23 @@ public class FormularioUtil {
         chooserFichero.setAcceptAllFileFilterUsed(false);
         
         if(chooserFichero.showOpenDialog(JOptionPane.getFrameForComponent(component)) == JFileChooser.APPROVE_OPTION){
+            chooserFichero.setCurrentDirectory(chooserFichero.getSelectedFile());
+            return chooserFichero.getSelectedFile().getAbsolutePath();
+        }else{
+            return "";
+        }
+    }
+    
+    public static String guardarFichero(Component component, String titulo){
+        if (chooserFichero == null) {
+            chooserFichero = new JFileChooser();
+            chooserFichero.setCurrentDirectory(new java.io.File("."));
+        }
+        chooserFichero.setDialogTitle(titulo);
+        chooserFichero.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        chooserFichero.setAcceptAllFileFilterUsed(false);
+        
+        if(chooserFichero.showSaveDialog(JOptionPane.getFrameForComponent(component)) == JFileChooser.APPROVE_OPTION){
             chooserFichero.setCurrentDirectory(chooserFichero.getSelectedFile());
             return chooserFichero.getSelectedFile().getAbsolutePath();
         }else{
