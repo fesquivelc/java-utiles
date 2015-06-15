@@ -53,7 +53,7 @@ public class ReporteUtil {
 
     public void exportarReporte(File reporteFichero, Map parametros, Formato formato, String rutaDestino) {
         try {
-            if(formato != Formato.PDF){
+            if (formato != Formato.PDF) {
                 parametros.put(JRParameter.IS_IGNORE_PAGINATION, true);
             }
             JasperPrint reporte = this.getReporte(reporteFichero, parametros);
@@ -82,29 +82,29 @@ public class ReporteUtil {
                     exporter = new JRCsvExporter();
                     extension = ".csv";
                     break;
-                case PDF: default:
+                case PDF:
+                default:
                     exporter = new JRPdfExporter();
                     extension = ".pdf";
 //                    SimplePdfReportConfiguration pdfConfig = new SimplePdfReportConfiguration();
                     break;
-                    
+
             }
 //            OutputStream os = new FileOutputStream(rutaDestino);
-            System.out.println("RUTA DESTINO ANTES DE REEMPLAZAR: "+rutaDestino);
+            System.out.println("RUTA DESTINO ANTES DE REEMPLAZAR: " + rutaDestino);
             String extensionInicial = FormularioUtil.getExtension(rutaDestino);
-            if(extensionInicial != null){
-                rutaDestino = rutaDestino.replaceAll("."+FormularioUtil.getExtension(rutaDestino),"");
-            }            
+            if (extensionInicial != null) {
+                rutaDestino = rutaDestino.replaceAll("." + FormularioUtil.getExtension(rutaDestino), "");
+            }
             rutaDestino = rutaDestino + extension;
-            System.out.println("RUTA DESTINO: "+rutaDestino);
+            System.out.println("RUTA DESTINO: " + rutaDestino);
             exporter.setExporterInput(new SimpleExporterInput(reporte));
-            exporter.setExporterOutput(formato != Formato.CSV ? new SimpleOutputStreamExporterOutput(rutaDestino) : new SimpleWriterExporterOutput(rutaDestino));            
-            exporter.exportReport();            
+            exporter.setExporterOutput(formato != Formato.CSV ? new SimpleOutputStreamExporterOutput(rutaDestino) : new SimpleWriterExporterOutput(rutaDestino));
+            exporter.exportReport();
         } catch (JRException ex) {
             java.util.logging.Logger.getLogger(ReporteUtil.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
-        
-        
+
     }
 
     public Connection getConn() {
@@ -120,14 +120,29 @@ public class ReporteUtil {
         LOG.info(rutaRelativa);
     }
 
-    public JasperPrint getReporte(File reporte, Map parametros) throws JRException{
+    public JasperPrint getReporte(File reporte, Map parametros) throws JRException {
         try {
             JasperReport report = (JasperReport) JRLoader.loadObject(reporte);
 //            System.out.println("INSIGNIA: " + insignia.getAbsolutePath());
             parametros.put("ruta", rutaRelativa);
 //            LOG.log(Level.INFO, "La ruta relativa es {0}", rutaRelativa);
             JasperPrint jasperPrint = JasperFillManager.fillReport(report, parametros, conn);
-            
+
+            return jasperPrint;
+        } catch (JRException ex) {
+            java.util.logging.Logger.getLogger(ReporteUtil.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            throw ex;
+        }
+    }
+    public JasperPrint getReporte(File reporte, Map parametros, List datos) throws JRException {
+        try {
+            JasperReport report = (JasperReport) JRLoader.loadObject(reporte);
+//            System.out.println("INSIGNIA: " + insignia.getAbsolutePath());
+            parametros.put("ruta", rutaRelativa);
+//            LOG.log(Level.INFO, "La ruta relativa es {0}", rutaRelativa);
+            JRBeanCollectionDataSource origen = new JRBeanCollectionDataSource(datos);
+            JasperPrint jasperPrint = JasperFillManager.fillReport(report, parametros, origen);
+
             return jasperPrint;
         } catch (JRException ex) {
             java.util.logging.Logger.getLogger(ReporteUtil.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
@@ -190,7 +205,8 @@ public class ReporteUtil {
         }
 
     }
-    public Component obtenerReporte(List listaObjetos,File reporte, Map parametros){
+
+    public Component obtenerReporte(List listaObjetos, File reporte, Map parametros) {
         try {
             JasperReport report = (JasperReport) JRLoader.loadObject(reporte);
             System.out.println("RUTA: " + reporte.getAbsolutePath());
@@ -198,11 +214,28 @@ public class ReporteUtil {
             JRBeanCollectionDataSource origen = new JRBeanCollectionDataSource(listaObjetos);
             JasperPrint jasperPrint = JasperFillManager.fillReport(report, parametros, origen);
             JasperViewer jasperViewer = new JasperViewer(jasperPrint, false);
-            
+
             return jasperViewer.getContentPane();
         } catch (JRException ex) {
             Logger.getLogger(ReporteUtil.class.getName()).log(Level.ERROR, null, ex);
             return null;
+        }
+
+    }
+
+    public void verReporte(List listaObjetos, File reporte, Map parametros, Frame ventana) {
+        try {
+            JasperPrint jasperPrint = this.getReporte(reporte, parametros, listaObjetos);
+            JasperViewer jasperViewer = new JasperViewer(jasperPrint, false);
+
+            JDialog visor = new JDialog(ventana, "Reporte", true);
+            visor.getContentPane().add(jasperViewer.getContentPane());
+            visor.setLocationRelativeTo(ventana);
+            visor.setBounds(GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds());
+            visor.setVisible(true);
+            visor.setAlwaysOnTop(true);            
+        } catch (JRException ex) {
+            Logger.getLogger(ReporteUtil.class.getName()).log(Level.ERROR, null, ex);
         }
 
     }
