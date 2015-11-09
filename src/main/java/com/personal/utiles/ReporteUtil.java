@@ -211,7 +211,7 @@ public class ReporteUtil {
             JasperReport report = (JasperReport) JRLoader.loadObject(reporte);
             System.out.println("RUTA: " + reporte.getAbsolutePath());
             parametros.put("ruta", rutaRelativa);
-            JRBeanCollectionDataSource origen = new JRBeanCollectionDataSource(listaObjetos);
+            JRBeanCollectionDataSource origen = new JRBeanCollectionDataSource(listaObjetos, false);
             JasperPrint jasperPrint = JasperFillManager.fillReport(report, parametros, origen);
             JasperViewer jasperViewer = new JasperViewer(jasperPrint, false);
 
